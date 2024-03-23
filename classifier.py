@@ -11,7 +11,7 @@ def load_model():
         output_hidden_states=False
     )
     PATH = 'finetuned_bert_classifier'
-    model.load_state_dict(torch.load(PATH))
+    model.load_state_dict(torch.load(PATH, torch.device('cpu')))
     model.eval()
     return model
 
@@ -59,7 +59,7 @@ def predict(new_sentence):
     with torch.no_grad():
         output = model(test_ids, token_type_ids = None, attention_mask = test_attention_mask)
 
-    insincere = True if np.argmax(output.logits.cpu().numpy()).flatten().item() == 1 else False
+    insincere = True if np.argmax(output.logits.numpy()).flatten().item() == 1 else False
 
     return insincere
 
